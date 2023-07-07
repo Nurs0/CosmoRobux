@@ -8,7 +8,7 @@ import { SQLiteConnector } from './src/db.js';
 
 
 const db = new SQLiteConnector("./database.db")
-const bot = new TelegramBot("6067241823:AAFocSyPdRaJji_-jxFqjIp2qrxR2pHPc2E", { polling: true });
+const bot = new TelegramBot("6280026583:AAGpEcb3nFZ9H9FMN--0wYdT5k0H9nWJ9SM", { polling: true });
 const AMQP_URL = "amqp://user:password@localhost:5672/test?heartbeat=0"
 
 try {
@@ -381,7 +381,7 @@ bot.on("callback_query", (callbackQuery) => {
                 ]
             }
         }
-        bot.sendMessage(809124390, `Поступила заявка от пользователя ${chatId}, на сумму ${Dividednumber} рублей!\nОплата была сделана через ${payment}`, keyboard)
+        bot.sendMessage(-831442430, `Поступила заявка от пользователя ${chatId}, на сумму ${Dividednumber} рублей!\nОплата была сделана через ${payment}`, keyboard)
         specialUserId = chatId
         return specialUserId
     } else if (data === "gamepassCostCalculator") {
@@ -466,8 +466,8 @@ bot.on("callback_query", (callbackQuery) => {
                 }
             );
         }
-        const chatId = 809124390
-        const adminUserId = 809124390
+        const chatId = -831442430
+        const adminUserId = -831442430
         const targetUserId = specialUserId
         const amount = Math.round(Dividednumber * 1.8)
         if (isAdminUser(adminUserId)) {
@@ -705,7 +705,7 @@ bot.on('message', async (msg) => {
 
         // Преобразуем текст в число и вычисляем увеличенное значение
         const number = parseFloat(text);
-        const increasedNumber = number * 1.3;
+        const increasedNumber = number * 1.43;
 
         bot.sendMessage(chatId, `Геймпасс должен стоить: ${increasedNumber} робуксов`);
     } else if (chatState[chatId] === "robuxCostCalculator") {
@@ -732,7 +732,7 @@ bot.onText(/\/start/, (msg) => {
     const userId = msg.from.id;
     const currentTime = new Date().toISOString();
 
-    bot.sendMessage(chatId, "Приветствую тебя в моем магазине робуксов)\nНиже предоставлено мое меню. Для того, чтобы вызвать меню заново, используй клавиатуру Вызвать меню", againMenu);
+    bot.sendMessage(chatId, "🪐 Приветствую тебя в моем магазине робуксов)\nНиже предоставлено мое меню. Для того, чтобы вызвать меню заново, используй клавиатуру Вызвать меню", againMenu);
     bot.sendMessage(chatId, "Вот мое меню:", Keyboard);
 
     db.get(`SELECT chatState FROM users WHERE userId = ?`, [userId], (err, row) => {
@@ -773,15 +773,15 @@ const Keyboard = {
                     text: "Купить Robux 💳", callback_data: "buyRobux"
                 },
                 {
-                    text: "Вывести Robux ⭐️", callback_data: "giveaway"
+                    text: "Вывести Robux 🪐", callback_data: "giveaway"
                 }
             ],
             [
                 {
-                    text: "Поддержка ❓", callback_data: "helpAdmin"
+                    text: "Поддержка 🛰", callback_data: "helpAdmin"
                 },
                 {
-                    text: "Новости 💯", callback_data: "newsChanel"
+                    text: "Новости 🌌", callback_data: "newsChanel"
                 }
             ],
             [
@@ -879,7 +879,6 @@ bot.onText(/\/blockuser (\d+)/, (msg, match) => {
         bot.sendMessage(chatId, "У вас нет прав на выполнение этой команды");
     }
 });
-
 bot.onText(/\/addToken (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const token = match[1]; // Значение токена, переданное в команде
@@ -911,12 +910,10 @@ function blockUser(userId, callback) {
         }
     );
 }
-
 function isAdminUser(userId) {
-    const adminUserIds = [809124390, 789012, 935770891];
+    const adminUserIds = [-831442430];
     return adminUserIds.includes(userId);
 }
-
 function increaseUserBalance(userId, amount, callback) {
     db.execute(
         `UPDATE users SET userBalance = userBalance + ? WHERE userId = ?`,
@@ -931,10 +928,9 @@ function increaseUserBalance(userId, amount, callback) {
         }
     );
 }
-
 function minusUserBalance(userId, amount, callback) {
     db.execute(
-        `UPDATE users SET userBalance = userBalance + ? WHERE userId = ?`,
+        `UPDATE users SET userBalance = userBalance - ? WHERE userId = ?`,
         [amount, userId],
         function (err) {
             if (err) {
@@ -953,7 +949,6 @@ bot.onText(/\/support/, (msg) => {
     // Отправка приветственного сообщения от технической поддержки
     bot.sendMessage(chatId, 'Добро пожаловать в службу технической поддержки. Как мы можем вам помочь?');
 });
-
 
 function handleUserMessage(chatId, message) {
     // Здесь вы можете добавить логику обработки сообщения пользователя
